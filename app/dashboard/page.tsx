@@ -5,8 +5,10 @@ import TransactionForm from "@/components/TransactionForm";
 import TransactionList from "@/components/TransactionList";
 import SummaryCards from "@/components/SummaryCards";
 import MonthSelector from "@/components/MonthSelector";
+import { cookies } from "next/dist/server/request/cookies";
+import { redirect } from "next/navigation";
 
-export default function DashboardPage() {
+export default async function DashboardPage() {
   const [refreshKey, setRefreshKey] = useState(0);
   const [income, setIncome] = useState(0);
   const [expense, setExpense] = useState(0);
@@ -14,6 +16,13 @@ export default function DashboardPage() {
   new Date().toISOString().slice(0, 7)
   );
   const [loading, setLoading] = useState(false);
+  const cookieStore = await cookies();
+  const session = cookieStore.get("session");
+  if (!session) {
+    redirect("/login"); // 🔐 login хийгээгүй бол
+  }
+
+  const userId = session.value;
 
   function refreshDashboard() {
     setRefreshKey((k) => k + 1);

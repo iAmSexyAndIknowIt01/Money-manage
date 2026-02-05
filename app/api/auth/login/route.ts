@@ -7,13 +7,6 @@ export async function POST(req: Request) {
   try {
     const { email, password } = await req.json();
 
-    if (!email || !password) {
-      return NextResponse.json(
-        { message: "Имэйл эсвэл нууц үг дутуу байна" },
-        { status: 400 }
-      );
-    }
-
     await connectDB();
 
     const user = await User.findOne({ email });
@@ -32,11 +25,21 @@ export async function POST(req: Request) {
       );
     }
 
-    // 🔐 Одоохондоо session/JWT хийхгүй
-    return NextResponse.json({
+    // ✅ session cookie үүсгэнэ
+    const response = NextResponse.json({
       message: "Амжилттай нэвтэрлээ",
-      userId: user._id,
     });
+
+    response.cookies.set({
+      name: "session",
+      value: user._id.toString(), // 🔑 userId
+      httpOnly: true,
+      path: "/",
+      maxAge: 60 * 60 * 24, // 1 өдөр
+      sameSite: "lax",
+    });
+
+    return response;
   } catch (error) {
     return NextResponse.json(
       { message: "Server error" },
