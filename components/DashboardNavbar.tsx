@@ -45,7 +45,7 @@ export default function DashboardNavbar({
               💸 Орлого / Зарлага
             </button>
 
-            <button
+            {/* <button
               onClick={() => onChange("investment")}
               className={`px-4 py-2 rounded-xl text-sm font-medium transition
                 ${
@@ -55,11 +55,11 @@ export default function DashboardNavbar({
                 }`}
             >
               📈 Хөрөнгө оруулалт
-            </button>
+            </button> */}
           </div>
 
           {/* Right */}
-          <button
+          {/* <button
             onClick={logout}
             className="
               px-3 py-2 rounded-xl
@@ -69,7 +69,7 @@ export default function DashboardNavbar({
             "
           >
             Гарах
-          </button>
+          </button> */}
         </div>
       </div>
     </div>
