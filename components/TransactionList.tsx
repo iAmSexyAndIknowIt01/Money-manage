@@ -16,7 +16,7 @@ export default function TransactionList({
   refreshKey,
   month,
   onSummary,
-  onRefresh,   // ✅ нэмэв
+  onRefresh,
 }: {
   refreshKey: number;
   month: string;
@@ -24,11 +24,11 @@ export default function TransactionList({
   onRefresh: () => void;
 }) {
   const [data, setData] = useState<Transaction[]>([]);
-  const [loading, setLoading] = useState(true); // ✅ 1️⃣ ЭНД нэмнэ
+  const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState<Transaction | null>(null);
 
   useEffect(() => {
-    setLoading(true); // ✅ 2️⃣ fetch эхлэхэд loading асаана
+    setLoading(true);
 
     fetch(`/api/transactions?month=${month}`)
       .then((res) => res.json())
@@ -44,44 +44,60 @@ export default function TransactionList({
           .reduce((a: number, b: Transaction) => a + b.amount, 0);
 
         onSummary(income, expense);
-        setLoading(false); // ✅ 3️⃣ fetch дуусахад унтраана
+        setLoading(false);
       });
   }, [refreshKey, month]);
 
-  // ✅ 4️⃣ ЯГ ЭНД Skeleton-оо буцаана
+  /* 🦴 Dark skeleton */
   if (loading) {
     return (
-      <div className="space-y-2 animate-pulse">
+      <div className="space-y-3 animate-pulse">
         {[1, 2, 3].map((i) => (
           <div
             key={i}
-            className="h-16 bg-slate-200 rounded-lg"
+            className="h-16 rounded-xl bg-slate-800 border border-white/5"
           />
         ))}
       </div>
     );
   }
 
-  // ⬇️ loading биш үед ЭНЭ хэсэг render хийнэ
   return (
     <>
-      <div className="space-y-2">
+      <div className="space-y-3">
+        {data.length === 0 && (
+          <p className="text-sm text-slate-400 text-center py-6">
+            Энэ сард гүйлгээ алга байна
+          </p>
+        )}
+
         {data.map((tx) => (
           <div
             key={tx._id}
             onClick={() => setSelected(tx)}
-            className="flex justify-between items-center bg-white p-3 rounded-lg shadow cursor-pointer hover:bg-slate-50"
+            className="
+              flex justify-between items-center
+              bg-slate-900 border border-white/10
+              p-4 rounded-2xl cursor-pointer
+              hover:bg-slate-800 transition
+            "
           >
             <div>
-              <p className="font-medium">{tx.category}</p>
-              <p className="text-xs text-gray-400">{tx.note}</p>
+              <p className="font-medium text-slate-100">
+                {tx.category}
+              </p>
+              {tx.note && (
+                <p className="text-xs text-slate-400">
+                  {tx.note}
+                </p>
+              )}
             </div>
 
             <p
-              className={`font-bold ${
+              className={`font-semibold ${
                 tx.type === "income"
-                  ? "text-green-600"
-                  : "text-red-600"
+                  ? "text-green-400"
+                  : "text-red-400"
               }`}
             >
               {tx.type === "income" ? "+" : "-"}
@@ -97,7 +113,7 @@ export default function TransactionList({
           onClose={() => setSelected(null)}
           onUpdated={() => {
             setSelected(null);
-            onRefresh();
+            onRefresh(); // 🔥 reload list + summary
           }}
         />
       )}

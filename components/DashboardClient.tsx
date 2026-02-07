@@ -24,22 +24,35 @@ export default function DashboardClient({ userId }: { userId: string }) {
   }
 
   return (
-    <div className="min-h-screen bg-slate-100 p-6">
-      <div className="max-w-4xl mx-auto space-y-6">
-        <h1 className="text-3xl font-bold">📊 Сарын санхүү</h1>
+    <div className="min-h-screen bg-slate-950 text-slate-100 px-6 py-10">
+      <div className="max-w-4xl mx-auto space-y-8">
+        {/* Title */}
+        <h1 className="text-3xl font-semibold tracking-tight">
+          📊 Сарын санхүү
+        </h1>
 
+        {/* Summary */}
         <SummaryCards income={income} expense={expense} />
 
-        <TransactionForm onAdded={refreshDashboard} />
+        {/* Form */}
+        <div className="bg-slate-900 border border-white/10 rounded-2xl p-4">
+          <TransactionForm onAdded={refreshDashboard} />
+        </div>
 
-        <MonthSelector value={month} onChange={setMonth} />
+        {/* Month selector */}
+        <div className="bg-slate-900 border border-white/10 rounded-2xl p-4">
+          <MonthSelector value={month} onChange={setMonth} />
+        </div>
 
-        <TransactionList
-          refreshKey={refreshKey}
-          month={month}
-          onSummary={handleSummary}
-          onRefresh={refreshDashboard}
-        />
+        {/* List */}
+        <div className="bg-slate-900 border border-white/10 rounded-2xl p-4">
+          <TransactionList
+            refreshKey={refreshKey}
+            month={month}
+            onSummary={handleSummary}
+            onRefresh={refreshDashboard}
+          />
+        </div>
       </div>
     </div>
   );
