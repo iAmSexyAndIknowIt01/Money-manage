@@ -5,6 +5,7 @@ import TransactionForm from "@/components/TransactionForm";
 import TransactionList from "@/components/TransactionList";
 import SummaryCards from "@/components/SummaryCards";
 import MonthSelector from "@/components/MonthSelector";
+import DashboardNavbar from "@/components/DashboardNavbar";
 
 export default function DashboardClient({ userId }: { userId: string }) {
   const [refreshKey, setRefreshKey] = useState(0);
@@ -13,6 +14,7 @@ export default function DashboardClient({ userId }: { userId: string }) {
   const [month, setMonth] = useState(
     new Date().toISOString().slice(0, 7)
   );
+  const [tab, setTab] = useState<"finance" | "investment">("finance");
 
   function refreshDashboard() {
     setRefreshKey((k) => k + 1);
@@ -24,34 +26,52 @@ export default function DashboardClient({ userId }: { userId: string }) {
   }
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 px-6 py-10">
-      <div className="max-w-4xl mx-auto space-y-8">
-        {/* Title */}
-        <h1 className="text-3xl font-semibold tracking-tight">
-          📊 Сарын санхүү
-        </h1>
+    <div className="min-h-screen bg-slate-950 text-slate-100">
+      
+      {/* 🔝 Navbar */}
+      <DashboardNavbar active={tab} onChange={setTab} />
 
-        {/* Summary */}
-        <SummaryCards income={income} expense={expense} />
+      <div className="px-6 py-10">
+        <div className="max-w-4xl mx-auto space-y-8">
 
-        {/* Form */}
-        <div className="bg-slate-900 border border-white/10 rounded-2xl p-4">
-          <TransactionForm onAdded={refreshDashboard} />
-        </div>
+          {tab === "finance" && (
+            <>
+              <h1 className="text-3xl font-semibold tracking-tight">
+                📊 Сарын санхүү
+              </h1>
 
-        {/* Month selector */}
-        <div className="bg-slate-900 border border-white/10 rounded-2xl p-4">
-          <MonthSelector value={month} onChange={setMonth} />
-        </div>
+              <SummaryCards income={income} expense={expense} />
 
-        {/* List */}
-        <div className="bg-slate-900 border border-white/10 rounded-2xl p-4">
-          <TransactionList
-            refreshKey={refreshKey}
-            month={month}
-            onSummary={handleSummary}
-            onRefresh={refreshDashboard}
-          />
+              <div className="bg-slate-900 border border-white/10 rounded-2xl p-4">
+                <TransactionForm onAdded={refreshDashboard} />
+              </div>
+
+              <div className="bg-slate-900 border border-white/10 rounded-2xl p-4">
+                <MonthSelector value={month} onChange={setMonth} />
+              </div>
+
+              <div className="bg-slate-900 border border-white/10 rounded-2xl p-4">
+                <TransactionList
+                  refreshKey={refreshKey}
+                  month={month}
+                  onSummary={handleSummary}
+                  onRefresh={refreshDashboard}
+                />
+              </div>
+            </>
+          )}
+
+          {tab === "investment" && (
+            <div className="
+              bg-slate-900 border border-white/10
+              rounded-2xl p-8 text-center
+            ">
+              <p className="text-slate-400">
+                📈 Хөрөнгө оруулалтын хэсэг удахгүй…
+              </p>
+            </div>
+          )}
+
         </div>
       </div>
     </div>
