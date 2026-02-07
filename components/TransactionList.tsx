@@ -95,7 +95,10 @@ export default function TransactionList({
         <TransactionModal
           tx={selected}
           onClose={() => setSelected(null)}
-          onUpdated={() => setSelected(null)}
+          onUpdated={() => {
+            setSelected(null);
+            onRefresh();
+          }}
         />
       )}
     </>
